@@ -82,6 +82,21 @@ Future<Contato> getContato(int id) async{
      return null;
    }
 }
+
+///lista de contatos
+
+Future<List<Contato>> getContatos()async{
+
+  Database db = await this.database;
+
+  var resultado = await db.query(contatoTable);
+
+  List<Contato> listadecontatos =
+    resultado.isNotEmpty ? resultado.map(
+    (c) => Contato.fromMap(c)).toList() : [];
+
+  return listadecontatos;
+}
 ///atualizar o objeti Contato e salva no banco de dados
 Future<int> updateContato (Contato contato) async{
   var db = await this.database;
@@ -122,7 +137,7 @@ Future<int> getCount() async {
 
   return resultado;
 }
-
+///fecha o banco
 Future close() async{
   Database db = await this.database;
 
