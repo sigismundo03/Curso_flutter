@@ -1,7 +1,9 @@
 
+import 'dart:math';
+import 'package:expenses/models/transaction.dart';
+import 'package:expenses/componetes/transactionForm.dart';
 import 'package:flutter/material.dart';
-
-import 'componetes/traansactionUser.dart';
+import 'componetes/transactionList.dart';
 
 main() => runApp(ExpensesApp());
 
@@ -14,8 +16,51 @@ class ExpensesApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final _transaction = [
+    Transaction(
+      id: 'ti1',
+      title: 'novo tenis da nike',
+      value: 305.40,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 'ti1',
+      title: 'novo tenis da nike',
+      value: 305.40,
+      date: DateTime.now(),
+    ),
+    
+  ];
+
+  _addtransaction(String title, double valor) {
+    final newtransaction = Transaction(
+      id: Random().nextDouble().toString(),
+      title: title,
+      value: valor,
+      date: DateTime.now(),
+    );
+    setState(() {
+      _transaction.add(newtransaction);
+    });
+    Navigator.of(context).pop();
+  }
+
+  _openTransactionForModol(BuildContext context){
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return TransactionForm(_addtransaction);
+
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +69,7 @@ class MyHomePage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add), 
-            onPressed: null),
+            onPressed: ()=>_openTransactionForModol(context)),
         ],
       ),
       body: SingleChildScrollView(
@@ -39,11 +84,18 @@ class MyHomePage extends StatelessWidget {
                 child: Text("Grafo"),
               ),
             ),
-            TransactionUser(),
+            TransactinList(_transaction),
+            
           ],
         ),
       ),
-      floatingActionButton: ,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: ()=>_openTransactionForModol(context),
+        
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
     );
   }
 }

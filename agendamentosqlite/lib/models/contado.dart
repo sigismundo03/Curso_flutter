@@ -1,5 +1,5 @@
 class Contato{
-  String id ;
+  int id ;
   String nome;
   String email;
   String imagem;
