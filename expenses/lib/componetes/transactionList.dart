@@ -27,7 +27,7 @@ class TransactinList extends StatelessWidget {
                     ),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.purple,
+                      color: Theme.of(context).primaryColor,
                       width: 2,
 
                     ),
@@ -47,9 +47,10 @@ class TransactinList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                     Text(trans.title,
-                      style: TextStyle(color: Colors.black,fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.headline6,
+                      // style: TextStyle(color: Colors.black,fontSize: 20,
+                      // fontWeight: FontWeight.bold,
+                      // ),
                     ),
                     Text(DateFormat("d MMM y").format(trans.date),
                       style: TextStyle(color: Colors.grey,fontSize: 15,
