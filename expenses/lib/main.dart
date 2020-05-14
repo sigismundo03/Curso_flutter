@@ -1,5 +1,6 @@
 
 import 'dart:math';
+import 'package:expenses/componetes/chat.dart';
 import 'package:expenses/models/transaction.dart';
 import 'package:expenses/componetes/transactionForm.dart';
 import 'package:flutter/material.dart';
@@ -42,21 +43,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transaction = [
-    // Transaction(
-    //   id: 'ti1',
-    //   title: 'novo tenis da nike',
-    //   value: 305.40,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 'ti1',
-    //   title: 'novo tenis da nike',
-    //   value: 305.40,
-    //   date: DateTime.now(),
-    // ),
+   
     
   ];
 
+  List<Transaction> get  _recentTransactions{
+    return _transaction.where((tr) {
+      return tr.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7)
+      
+      ));
+     }
+    );
+  }
   _addtransaction(String title, double valor) {
     final newtransaction = Transaction(
       id: Random().nextDouble().toString(),
@@ -98,13 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                elevation: 8,
-                child: Text("Grafo"),
-              ),
-            ),
+            Chart(_recentTransactions),
             TransactinList(_transaction),
             
           ],

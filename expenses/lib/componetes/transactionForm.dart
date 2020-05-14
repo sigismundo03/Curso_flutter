@@ -15,12 +15,12 @@ class _TransactionFormState extends State<TransactionForm> {
   final valuecontrole = TextEditingController();
 
   _subform(){
-      final title = titlecontrole.text;
-      final value = double.tryParse(valuecontrole.text) ?? 0.0;
+      final String title = titlecontrole.text;
+      final double value = double.tryParse(valuecontrole.text) ?? 0.0;
       if(title.isEmpty || value <= 0 ){
         return;
       }
-     widget.onSubmit(title,value);
+     return widget.onSubmit(title,value);
   }
 
   @override
