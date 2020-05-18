@@ -1,10 +1,10 @@
 
 import 'dart:math';
-import 'package:expenses/componetes/chat.dart';
+import 'package:expenses/components/chat.dart';
 import 'package:expenses/models/transaction.dart';
-import 'package:expenses/componetes/transactionForm.dart';
+import 'package:expenses/components/transactionForm.dart';
 import 'package:flutter/material.dart';
-import 'componetes/transactionList.dart';
+import 'components/transactionList.dart';
 
 main() => runApp(ExpensesApp());
 

@@ -13,7 +13,7 @@ class TransactinList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 300,
-      child:transaction.isEmpty? Column(
+      child:transaction.isEmpty ? Column(
         children: <Widget>[
           SizedBox(height: 20,),
           Text("Nenhuma transação",
@@ -50,10 +50,11 @@ class TransactinList extends StatelessWidget {
                   padding: EdgeInsets.all(10),
                     child: Text(
                       "R\$ ${trans.value.toStringAsFixed(2)}",
-                      style: TextStyle(color: Colors.purple,fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      
-                      ),
+                      style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Theme.of(context).primaryColor,
+                          ),
                     ),
 
                   ),
