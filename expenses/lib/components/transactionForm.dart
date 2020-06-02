@@ -20,7 +20,7 @@ class _TransactionFormState extends State<TransactionForm> {
       if(title.isEmpty || value <= 0 ){
         return;
       }
-     return widget.onSubmit(title,value);
+      widget.onSubmit(title,value);
   }
 
   @override
