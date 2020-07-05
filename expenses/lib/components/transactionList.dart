@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class TransactinList extends StatelessWidget {
 
-  final List<Transaction> transaction ;
+  final List<Transaction> transaction;
   
   TransactinList(this.transaction);
 
@@ -12,7 +12,7 @@ class TransactinList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+       height: 300,
       child:transaction.isEmpty ? Column(
         children: <Widget>[
           SizedBox(height: 20,),
@@ -32,51 +32,26 @@ class TransactinList extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final trans = transaction[index];
           return Card(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 15,
-                    ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).primaryColor,
-                      width: 2,
-
-                    ),
-                    
+            elevation: 3.0,
+            margin: EdgeInsets.symmetric(vertical: 8,horizontal: 5),
+            child: ListTile(
+                leading: CircleAvatar(
+                  radius:30.0 ,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: FittedBox(
+                      child: Text('R\$${trans.value}'),),
                   ),
-                  padding: EdgeInsets.all(10),
-                    child: Text(
-                      "R\$ ${trans.value.toStringAsFixed(2)}",
-                      style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                    ),
-
-                  ),
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                    Text(trans.title,
-                      style: Theme.of(context).textTheme.headline6,
-                      
-                    ),
-                    Text(DateFormat("d MMM y").format(trans.date),
-                      style: TextStyle(color: Colors.grey,fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    ],
-                  ),
-                  
-                ],
-                
-              ),
-              );
+                ),
+                title: Text(
+                  trans.title,
+                  style: Theme.of(context).textTheme.bodyText2, 
+                ),
+                subtitle: Text(
+                  DateFormat('D MMM Y').format(trans.date),
+                ),
+            ),
+          );
               
         },
         

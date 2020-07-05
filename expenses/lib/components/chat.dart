@@ -29,23 +29,37 @@ class Chart extends StatelessWidget {
         "day": DateFormat.E().format(weekDay)[0],
         "value": sumtotal,
       };
-    });
+    }).reversed.toList();
   }
 
+double get _wekTotalValue{
+  return groupedTransanction.fold(0.0,(sum, tr){
+    return sum + tr['value'];
+
+  });
+
+}
   @override
   Widget build(BuildContext context) {
-    groupedTransanction;
+    
     return Card(
       elevation: 6.0,
       margin: EdgeInsets.all(20),
-      child: Row(
-        children: groupedTransanction.map((tr) {
-          return ChartBar(
-            label: tr['day'],
-            value: tr['value'],
-            percentage: 0.8,
-          );
-        }).toList(),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: groupedTransanction.map((tr) {
+            return Flexible(
+              fit: FlexFit.tight,
+              child: ChartBar(
+                label: tr['day'],
+                value: tr['value'],
+                percentage: (tr['value'] as double)/ _wekTotalValue,
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
