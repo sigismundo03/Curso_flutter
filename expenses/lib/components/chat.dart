@@ -11,7 +11,7 @@ class Chart extends StatelessWidget {
   List<Map<String, Object>> get groupedTransanction {
     return List.generate(7, (index) {
       final weekDay = DateTime.now().subtract(
-        Duration(days: 3),
+        Duration(days: index),
       );
 
       double sumtotal = 0.0;
@@ -55,7 +55,7 @@ double get _wekTotalValue{
               child: ChartBar(
                 label: tr['day'],
                 value: tr['value'],
-                percentage: (tr['value'] as double)/ _wekTotalValue,
+                percentage: _wekTotalValue == 0 ? 0 : (tr['value'] as double)/ _wekTotalValue,
               ),
             );
           }).toList(),
