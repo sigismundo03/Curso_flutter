@@ -9,11 +9,8 @@ import 'components/transactionList.dart';
 main() => runApp(ExpensesApp());
 
 class ExpensesApp extends StatelessWidget {
-  
   @override
-  
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       home: MyHomePage(),
       theme: ThemeData(
@@ -49,6 +46,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool swochart = false;
   final List<Transaction> _transaction = [];
 
   List<Transaction> get _recentTransactions {
@@ -87,35 +85,56 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final appbar= AppBar(
-        title: Text("Despesas pessoal"),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () => _openTransactionForModol(context)),
-        ],
-      );
-    final availableHeigth = MediaQuery.of(context).size.height - 
-     appbar.preferredSize.height -
-     MediaQuery.of(context).padding.top;
+    bool islandscape =  MediaQuery.of(context).orientation == Orientation.landscape;
+
+
+
+    final appbar = AppBar(
+      title: Text("Despesas pessoal"),
+      actions: <Widget>[
+        IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => _openTransactionForModol(context),),
+      
+     if(islandscape) IconButton(
+            icon: Icon(swochart ? Icons.list: Icons.chat),
+            onPressed: () {
+              setState((){
+                swochart = !swochart;
+              });
+            },),
+      ],
+    );
+    final availableHeigth = MediaQuery.of(context).size.height -
+        appbar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
     return Scaffold(
       appBar: appbar,
       body: SingleChildScrollView(
         child: Column(
-          
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Switch(value: true, onChanged: (value){
-
-                }),
-              ],
-            ),
-            Container(
-              height: availableHeigth * 0.3,
+            // if(islandscape)
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: <Widget>[
+            //     Text("Exebir o Gráfico"),
+            //     Switch(
+            //       value: true,
+            //       onChanged: (value) {
+            //         setState((){
+            //           swochart = value;
+            //         });
+            //       },
+            //     ),
+            //   ],
+            // ),
+            if (swochart || !islandscape)
+             Container(
+              height: availableHeigth * (islandscape ? 0.7:0.3),
               child: Chart(_recentTransactions),
             ),
+            if (!swochart || islandscape)
             Container(
               height: availableHeigth * 0.7,
               child: TransactinList(_transaction, _deleteTransaction),
