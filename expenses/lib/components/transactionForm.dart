@@ -1,6 +1,8 @@
+import 'package:expenses/components/adaptative_pircker.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+
+import 'adaptative_forms.dart';
 import 'adatative_button1.dart';
 
 class TransactionForm extends StatefulWidget {
@@ -26,23 +28,7 @@ class _TransactionFormState extends State<TransactionForm> {
       }
       widget.onSubmit(title,value,_dateTime);
   }
-  _showDatePicker(){
-    showDatePicker(
-      context: context, 
-      initialDate: DateTime.now(), 
-      firstDate: DateTime(2019), 
-      lastDate: DateTime.now(),
-      ).then((pickerDate) {
-        if(pickerDate == null){
-          return ;
-        }
-        setState((){
-          _dateTime = pickerDate;
-        });
-        
-      }
-      );
-  }
+ 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -57,44 +43,23 @@ class _TransactionFormState extends State<TransactionForm> {
                 ),
                 child: Column(
                   children: <Widget>[
-                    TextField(
-                      controller: _titlecontrole,
-                      onSubmitted: (_) => _subform(),
-                      decoration: InputDecoration(
-                      labelText: "titulo",
-                      )
-
-                    ),
-                    TextField(
-                      controller: _valuecontrole,
-                      onSubmitted: (_) => _subform(),
-                      keyboardType: TextInputType.numberWithOptions(),
-                      decoration: InputDecoration(
-                        labelText: "Valor (R\$)",
-                      )
-                    ),
-                    Container(
-                      height: 70,
-                      child: Row(
-                        children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                _dateTime == null ?'Nenhum data Selecionada!' :
-                                     'Data selecionada ${ DateFormat('d/M/y').format(_dateTime)}'
-                                
-                                ),
-                            ),
-                            FlatButton(
-                              textColor: Theme.of(context).primaryColor,
-                              child: Text(
-                                "seleciona a data",
-                                style: TextStyle(fontWeight: FontWeight.bold,
-                               ),
-                              ),
-                              onPressed:_showDatePicker,
-                            )
-                        ],
-                      ),
+                     AdaptativeForm(
+                       controller: _titlecontrole,
+                       onSubmitted:  (_) => _subform(),
+                       label: "titulo",
+                       
+                     ),
+                     AdaptativeForm(
+                       controller: _valuecontrole,
+                       onSubmitted: (_) => _subform(),
+                       keyboardType: TextInputType.numberWithOptions(),
+                       label: "Valor (R\$)",
+                     ),
+                    AdaptativePircker(selectDate: _dateTime,onDateChangend: (newdate){
+                        setState(() {
+                          _dateTime = newdate;
+                        });
+                    },
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
