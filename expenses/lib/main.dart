@@ -1,7 +1,9 @@
 import 'dart:math';
+import 'dart:io';
 import 'package:expenses/components/chat.dart';
 import 'package:expenses/models/transaction.dart';
 import 'package:expenses/components/transactionForm.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'components/transactionList.dart';
@@ -85,32 +87,57 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool islandscape =  MediaQuery.of(context).orientation == Orientation.landscape;
+    final mediaQuery =  MediaQuery.of(context);
+    bool islandscape =  mediaQuery.orientation == Orientation.landscape;
+    final ios = Platform.isIOS;
 
+  Widget _getIconButtton(IconData icon, Function fn){
+      return ios ? 
+      GestureDetector( onTap: fn, child: Icon(icon),):
+      IconButton(
+            icon: Icon(icon),
+            onPressed:  fn,
+      );
 
-
-    final appbar = AppBar(
-      title: Text("Despesas pessoal"),
-      actions: <Widget>[
-        IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _openTransactionForModol(context),),
+  }
+final iconslist = ios ? CupertinoIcons.refresh:   Icons.list;
+final iconchart  = ios ? CupertinoIcons.refresh:   Icons.chat;
+    final action =  <Widget>[
+        _getIconButtton(
+             ios ? CupertinoIcons.add :Icons.add,
+            () => _openTransactionForModol(context),),
       
-     if(islandscape) IconButton(
-            icon: Icon(swochart ? Icons.list: Icons.chat),
-            onPressed: () {
+     if(islandscape) _getIconButtton(
+            swochart ? iconslist: iconchart,
+             () {
               setState((){
                 swochart = !swochart;
               });
             },),
-      ],
-    );
-    final availableHeigth = MediaQuery.of(context).size.height -
+      ];
+    
+
+final PreferredSizeWidget appbar = ios ? 
+     CupertinoNavigationBar(
+       middle:Text("Despesas pessoal"),
+       trailing:Row(
+         mainAxisSize: MainAxisSize.min,
+         children: action,
+       ),
+     )
+    :
+    AppBar(
+      title: Text("Despesas pessoal"),
+      actions:action,
+        );
+     
+
+  final availableHeigth = mediaQuery.size.height -
         appbar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
-    return Scaffold(
-      appBar: appbar,
-      body: SingleChildScrollView(
+        mediaQuery.padding.top;
+    
+    final page =SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -131,18 +158,32 @@ class _MyHomePageState extends State<MyHomePage> {
             // ),
             if (swochart || !islandscape)
              Container(
-              height: availableHeigth * (islandscape ? 0.7:0.3),
+              height: availableHeigth * (islandscape ? 0.8:0.3),
               child: Chart(_recentTransactions),
             ),
             if (!swochart || islandscape)
             Container(
-              height: availableHeigth * 0.7,
+              height: availableHeigth * (islandscape ? 1:0.7),
               child: TransactinList(_transaction, _deleteTransaction),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
+    ),
+    );
+
+    
+    
+    return  ios ?
+     CupertinoPageScaffold(
+       navigationBar: appbar,
+       child:page , 
+     
+     )
+     : 
+     Scaffold(
+      appBar: appbar,
+      body: page,
+      floatingActionButton: ios ?Container():FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _openTransactionForModol(context),
       ),

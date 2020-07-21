@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'adatative_button1.dart';
+
 class TransactionForm extends StatefulWidget {
   final void Function(String , double,DateTime) onSubmit;
 
@@ -43,66 +45,72 @@ class _TransactionFormState extends State<TransactionForm> {
   }
   @override
   Widget build(BuildContext context) {
-    return Card(
-            elevation: 10,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: <Widget>[
-                  TextField(
-                    controller: _titlecontrole,
-                    onSubmitted: (_) => _subform(),
-                    decoration: InputDecoration(
-                    labelText: "titulo",
-                    )
-
-                  ),
-                  TextField(
-                    controller: _valuecontrole,
-                    onSubmitted: (_) => _subform(),
-                    keyboardType: TextInputType.numberWithOptions(),
-                    decoration: InputDecoration(
-                      labelText: "Valor (R\$)",
-                    )
-                  ),
-                  Container(
-                    height: 70,
-                    child: Row(
-                      children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              _dateTime == null ?'Nenhum data Selecionada!' :
-                                   'Data selecionada ${ DateFormat('d/M/y').format(_dateTime)}'
-                              
-                              ),
-                          ),
-                          FlatButton(
-                            textColor: Theme.of(context).primaryColor,
-                            child: Text(
-                              "seleciona a data",
-                              style: TextStyle(fontWeight: FontWeight.bold,
-                             ),
-                            ),
-                            onPressed:_showDatePicker,
-                          )
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      RaisedButton( 
-                        child: Text("Nova trasação"),
-                        textColor: Theme.of(context).textTheme.button.color,
-                        color:Theme.of(context).primaryColor,                        
-                        onPressed: _subform, 
+    return SingleChildScrollView(
+      child: Card(
+              elevation: 10,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: 10,
+                  right: 10,
+                  left: 10,
+                  bottom: 10 + MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      controller: _titlecontrole,
+                      onSubmitted: (_) => _subform(),
+                      decoration: InputDecoration(
+                      labelText: "titulo",
                       )
-                    ],
-                  )
-                ],
+
+                    ),
+                    TextField(
+                      controller: _valuecontrole,
+                      onSubmitted: (_) => _subform(),
+                      keyboardType: TextInputType.numberWithOptions(),
+                      decoration: InputDecoration(
+                        labelText: "Valor (R\$)",
+                      )
+                    ),
+                    Container(
+                      height: 70,
+                      child: Row(
+                        children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                _dateTime == null ?'Nenhum data Selecionada!' :
+                                     'Data selecionada ${ DateFormat('d/M/y').format(_dateTime)}'
+                                
+                                ),
+                            ),
+                            FlatButton(
+                              textColor: Theme.of(context).primaryColor,
+                              child: Text(
+                                "seleciona a data",
+                                style: TextStyle(fontWeight: FontWeight.bold,
+                               ),
+                              ),
+                              onPressed:_showDatePicker,
+                            )
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        AdaptativeButon(
+                          label:"Nova trasação",
+                          onpressed:_subform,
+                          ),
+                        
+                      ],
+                    )
+                  ],
+                ),
+                
               ),
-              
             ),
-          );
+    );
   }
 }

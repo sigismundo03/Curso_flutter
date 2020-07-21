@@ -55,7 +55,7 @@ double get _wekTotalValue{
               child: ChartBar(
                 label: tr['day'],
                 value: tr['value'],
-                percentage: _wekTotalValue == 0 ? 0 : (tr['value'] as double)/ _wekTotalValue,
+                percentage: _wekTotalValue != 0 ? 0 : (tr['value'] as double)/ _wekTotalValue,
               ),
             );
           }).toList(),
