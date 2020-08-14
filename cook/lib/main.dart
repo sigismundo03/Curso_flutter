@@ -1,10 +1,11 @@
 import 'dart:ui';
 
+import 'views/tabs_view.dart';
 import 'package:cook/util/approutes.dart';
 import 'package:cook/views/meal_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'views/category_meals_view.dart';
-import 'views/category_view.dart';
+
  
 void main() => runApp(MyApp());
  
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        AppRoutes.Home: (context) => CategoryView(),
+        AppRoutes.Home: (context) => TabsView(),
         AppRoutes.CATEGORY_EMAILS:(context) => CategoryMealsView(),
         AppRoutes.MEAL_DETAIL:(context) => MealDetailView(),
       },
