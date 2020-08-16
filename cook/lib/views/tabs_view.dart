@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../views/category_view.dart';
 import '../views/favorite_view.dart';
+import '../components/man_dawer.dart';
 
 
 class TabsView extends StatefulWidget {
@@ -30,6 +31,11 @@ class _TabsViewState extends State<TabsView> {
         ),
 
       body: _view[_selectedViewindex]["view"],
+
+      drawer: ManDrawer(
+
+      ),
+
       bottomNavigationBar:BottomNavigationBar(
         onTap: _selectedView,
         backgroundColor: Theme.of(context).primaryColor,

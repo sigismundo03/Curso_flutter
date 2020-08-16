@@ -5,15 +5,20 @@ import 'package:cook/util/approutes.dart';
 import 'package:cook/views/meal_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'views/category_meals_view.dart';
-
+import 'views/settings_view.dart';
+import 'models/meal.dart';
+import 'data/dummy_data.dart';
  
 void main() => runApp(MyApp());
  
 class MyApp extends StatelessWidget {
+
+  List<Meal> _availableMeals =  DUMMY_MEALS;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Go we Cook',
+      title: '\vamos Cozinha? ',
       theme: ThemeData(
         primarySwatch: Colors.pink,
         accentColor: Colors.amber,
@@ -29,8 +34,9 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         AppRoutes.Home: (context) => TabsView(),
-        AppRoutes.CATEGORY_EMAILS:(context) => CategoryMealsView(),
+        AppRoutes.CATEGORY_EMAILS:(context) => CategoryMealsView(_availableMeals),
         AppRoutes.MEAL_DETAIL:(context) => MealDetailView(),
+        AppRoutes.Settings:(context) => SettingsView(),
       },
     
     );
