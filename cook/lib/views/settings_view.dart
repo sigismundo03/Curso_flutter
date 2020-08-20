@@ -3,24 +3,42 @@ import '../components/man_dawer.dart';
 import '../models/settengs.dart';
 
 class SettingsView extends StatefulWidget {
+
+  final Settengs settengs;
+  final Function (Settengs) onSettingsChanged;
+
+  const SettingsView( this.settengs, this.onSettingsChanged,);
+
   @override
   _SettingsViewState createState() => _SettingsViewState();
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  var settings = Settengs();
+  Settengs settings;
+
+  @override
+  void initState(){
+    super.initState();
+    settings = widget.settengs;
+
+  }
 
   Widget _createSwitch(
     String title,
     String subtitle,
     bool value,
-    Function onChanged,
+    Function (bool) onChanged,
   ) {
     return SwitchListTile(
       title: Text(title),
       subtitle: Text(subtitle),
       value: value,
-      onChanged: onChanged,
+      onChanged: (value){
+        
+       onChanged(value);
+       widget.onSettingsChanged(settings);
+       
+       }
     );
   }
 
