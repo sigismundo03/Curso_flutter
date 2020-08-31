@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/components/badge.dart';
 import 'package:shop/components/product_grid.dart';
+import 'package:shop/providers/cart.dart';
+import '../utils/app_routes.dart';
 
 
 enum FilterOption{
@@ -35,7 +39,7 @@ class _ProdutoOverviewViewesState extends State<ProdutoOverviewViewes> {
 
             },
             icon: Icon(Icons.more_vert),
-            itemBuilder: (_) =>[
+            itemBuilder: (_) => [
               PopupMenuItem(
                 child: Text('Somente Favoritos'),
                 value: FilterOption.Favorite,
@@ -45,7 +49,22 @@ class _ProdutoOverviewViewesState extends State<ProdutoOverviewViewes> {
                 child: Text('todos'),
                 value: FilterOption.All,
               ),
+              
             ],
+          ),
+          Consumer<Cart>(
+            builder:(context,cart,_)=> Badge(
+              value: cart.coutitem.toString(),
+              child: IconButton(
+                  icon: Icon(Icons.add_shopping_cart) ,
+                  onPressed: (){
+                    Navigator.of(context).pushNamed(
+                      AppRoutes.Cart,
+                    );
+                  },
+              ),
+              
+            ),
           ),
         ],
       ),
