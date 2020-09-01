@@ -14,6 +14,19 @@ class ProductDetalheView extends StatelessWidget {
       appBar: AppBar(
         title: Text(product.title),
       ),
+
+      body: Column(
+        children: [
+          Container(
+            height: 300,
+            width: double.infinity,
+            child: Image.network(
+              product.imageUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+      ),
       
     );
   }
