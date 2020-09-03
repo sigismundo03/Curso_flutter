@@ -23,18 +23,23 @@ class Order{
 
 
 class Orders with ChangeNotifier{
-  List<Order> _order = [];
+  List<Order> _items = [];
 
-  List<Order> get orders {
-    return [..._order];
+  List<Order> get items {
+    return [..._items];
   }
 
-  void addOrders(List<CartItem> products, double total ){
-    _order.insert(0, Order(
+  
+  int get itemCount{
+    return _items.length;
+  }
+  
+  void addOrders(Cart cart ){
+    _items.insert(0, Order(
         id: Random().nextDouble().toString(),
-        total: total,
+        total: cart.totalAmount,
         dateTime: DateTime.now(),
-        products: products,
+        products: cart.item.values.toList(),
     ),
     );
     notifyListeners();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/components/cartitemwidget.dart';
 import '../providers/cart.dart';
+import '../providers/orders.dart';
 
 class CartView extends StatelessWidget {
   
@@ -9,7 +10,7 @@ class CartView extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    final Cart cart = Provider.of(context);
+    final Cart cart = Provider.of<Cart>(context);
     final cartItem = cart.item.values.toList();
     
     return Scaffold(
@@ -42,7 +43,10 @@ class CartView extends StatelessWidget {
                   ),
                   Spacer(),
                   FlatButton(
-                    onPressed: null,
+                    onPressed: (){
+                      Provider.of<Orders>(context, listen: false).addOrders(cart,);
+                      cart.clear();
+                    },
                     child: Text(
                       'COMPRAR',
                       style: TextStyle(color: Theme.of(context).primaryColor,),
