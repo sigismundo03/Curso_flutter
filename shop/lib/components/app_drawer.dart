@@ -33,6 +33,15 @@ class APPDrawer extends StatelessWidget {
               );
             },
            ),
+             ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Gerecia Produtos'),
+            onTap: (){
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.PRODUCT,
+              );
+            },
+           ),
         
         ],
         

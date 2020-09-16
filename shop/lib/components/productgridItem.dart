@@ -5,7 +5,7 @@ import '../providers/Product.dart';
 import '../providers/cart.dart';
 import '../utils/app_routes.dart';
 
-class ProductItem extends StatelessWidget {
+class ProductGridItem extends StatelessWidget {
 
   
 
@@ -50,6 +50,22 @@ class ProductItem extends StatelessWidget {
               icon: Icon(Icons.add_shopping_cart),
               color: Theme.of(context).accentColor,
               onPressed: (){
+                 Scaffold.of(context).hideCurrentSnackBar();
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Produto adiconado com sucesso!'
+                    ),
+                    duration: Duration(seconds: 2),
+                    action: SnackBarAction(
+                      label: 'DESFAZER',
+                      onPressed: (){
+                        cart.removeSigleItem(product.id);
+                      },
+                      
+                    ),
+                  )
+                );
                 cart.addItem(product);
                 
               },
