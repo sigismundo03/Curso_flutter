@@ -1,7 +1,9 @@
-import 'dart:math';
+
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/providers/Product.dart';
+import 'package:shop/providers/products.dart';
 
 class ProductFormView extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class _ProductFormViewState extends State<ProductFormView> {
   final _imageControle = TextEditingController();
   final _form = GlobalKey<FormState>();
   final _formData = Map<String, Object>();
+  bool isLoanding = false;
   
   
   @override
@@ -51,8 +54,25 @@ class _ProductFormViewState extends State<ProductFormView> {
     _imageUrlFocusNode.removeListener( updateImage);
     _imageUrlFocusNode.dispose();
   }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-  void _saveForm() {
+    if(_formData.isEmpty){
+      var product = ModalRoute.of(context).settings.arguments as Product;
+      if(product != null){
+      _formData['id'] = product.id;
+      _formData['title'] = product.title;
+      _formData['price'] = product.price;
+      _formData['description'] = product.description;
+      _formData['imageUrl'] = product.imageUrl;
+
+      }
+      _imageControle.text =  _formData['imageUrl'] == null ? '': _formData['imageUrl'];
+    }
+  }
+
+  Future<void> _saveForm() async{
    var isValid = _form.currentState.validate();
 
    if(!isValid){
@@ -62,13 +82,60 @@ class _ProductFormViewState extends State<ProductFormView> {
     _form.currentState.save();
     final newProduct = Product(
       description: _formData["description"],
-      id: Random().nextDouble().toString(),
+      id:_formData['id'],
       imageUrl: _formData["imageUrl"],
       price:_formData["price"] ,
       title: _formData["title"],
       
 
     );
+
+    setState(() {
+      isLoanding=true;
+    });
+
+
+    final products = Provider.of<Products>(context, listen: false,);
+    if(_formData['id'] == null){
+      try{
+        await products.addProduct(newProduct);
+         Navigator.of(context).pop();
+      } catch(error){
+        await showDialog<Null>(
+          context:context ,
+          builder: (context,){
+            return AlertDialog(
+              title: Text("oCorreu um error"),
+              content: Text(error.toString()),
+              actions: [
+                FlatButton(
+                 onPressed: (){
+                    Navigator.of(context).pop();
+                 },
+                 child: Text("Ok"),
+                ),
+              ],
+            );
+            
+          }
+        );
+      } finally{
+        setState(() {
+          isLoanding=false;
+        });
+       
+      }
+     
+      
+    }else{
+        setState(() {
+          isLoanding=false;
+        });
+      products.updateProduct(newProduct);
+
+    Navigator.of(context).pop();
+    }
+
 
   }
   
@@ -87,7 +154,9 @@ class _ProductFormViewState extends State<ProductFormView> {
         ],
       ),
 
-      body: Padding(
+      body:  isLoanding ?Center(
+        child: CircularProgressIndicator(),
+      ): Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
           key: _form,
@@ -97,6 +166,7 @@ class _ProductFormViewState extends State<ProductFormView> {
                 decoration: InputDecoration(
                   labelText: 'Titulo',
                 ),
+                initialValue: _formData['title'],
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_){
                   FocusScope.of(context).requestFocus(_priceFocusNode);
@@ -116,22 +186,34 @@ class _ProductFormViewState extends State<ProductFormView> {
                 decoration: InputDecoration(
                   labelText: 'preço',
                 ),
+                initialValue: _formData['price'].toString() ,
                 textInputAction: TextInputAction.next,
                 focusNode: _priceFocusNode,
+                
                 keyboardType: TextInputType.numberWithOptions(
                   decimal: true,
                 ),
                 onSaved: (value){
-                  _formData["price"] =  double.parse(value);
+                   _formData["price"] =  double.parse(value);
                 },
                 onFieldSubmitted: (_){
                   FocusScope.of(context).requestFocus(_descFocusNode);
+                },
+                validator: (value){
+                  bool priceisvazia = value.trim().isEmpty;
+                  var newprice = double.tryParse(value);
+                  bool priceisinvalida = newprice == null || newprice <=0;
+                  if(priceisvazia || priceisinvalida){
+                    return "Informe um preço válido";
+                  }
+                  return null;
                 },
               ),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Descrição',
                 ),
+                initialValue:_formData['description'], 
                 focusNode: _descFocusNode,
                 onSaved: (value){
                   _formData["description"] =  value;
@@ -161,7 +243,7 @@ class _ProductFormViewState extends State<ProductFormView> {
                     child: TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Url da Imagem',
-                      ),
+                      ),                      
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
                       focusNode: _imageUrlFocusNode,

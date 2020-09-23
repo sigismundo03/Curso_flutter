@@ -4,6 +4,7 @@ import 'package:shop/components/app_drawer.dart';
 import 'package:shop/components/badge.dart';
 import 'package:shop/components/product_grid.dart';
 import 'package:shop/providers/cart.dart';
+import 'package:shop/providers/products.dart';
 import '../utils/app_routes.dart';
 
 
@@ -20,6 +21,18 @@ class ProdutoOverviewViewes extends StatefulWidget  {
 
 class _ProdutoOverviewViewesState extends State<ProdutoOverviewViewes> {
   bool _showFavorite = false;
+  bool _isloading = true;
+
+
+  @override
+  void initState() {
+    super.initState();
+   Provider.of<Products>(context, listen: false,).loaProducts().then((_) {
+     setState(() {
+       _isloading = false;
+     });
+   });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +82,9 @@ class _ProdutoOverviewViewesState extends State<ProdutoOverviewViewes> {
           ),
         ],
       ),
-      body: ProductGrid(_showFavorite),
+      body: _isloading ? Center(
+        child: CircularProgressIndicator(),
+      ): ProductGrid(_showFavorite),
       drawer: APPDrawer(),
     );
   }
