@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop/views/cartview.dart';
 
 import 'views/orders_view.dart';
+import 'views/authview.dart';
 import 'views/produtooverview_viwes.dart';
 import 'views/productview.dart';
 import 'views/productformview.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ),
         //home: ProdutoOverviewViewes(),
         routes: {
+          AppRoutes.AUTH: (context) => AuthView(),
           AppRoutes.HOME: (context) => ProdutoOverviewViewes(),
           AppRoutes.PRODUCT_DETALHE: (context) => ProductDetalheView(),
           AppRoutes.Cart: (context) => CartView(),

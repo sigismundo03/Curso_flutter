@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop/utils/constant.dart';
 
 import './cart.dart';
 
@@ -23,7 +24,7 @@ class Order{
 
 
 class Orders with ChangeNotifier{
-  final baseUrl ="";
+  final baseUrl ="${Urls.Base_API}orders";
   List<Order> _items = [];
 
   List<Order> get items {
@@ -37,7 +38,7 @@ class Orders with ChangeNotifier{
   
    Future<void> addOrders(Cart cart ) async {
      final date =DateTime.now();
-     final response = await http.post(baseUrl, body: json.encode({
+     final response = await http.post('$baseUrl.json', body: json.encode({
         'total': cart.totalAmount,
         'dateTime': date.toIso8601String(),
         'products': cart.item.values.map((cartItem) => {
@@ -60,6 +61,40 @@ class Orders with ChangeNotifier{
       }
    
     notifyListeners();
+
+  }
+  Future<void> loaOrders() async{
+
+  List<Order> loaditems = [];
+    final response = await http.get("$baseUrl.json");
+    Map<String,dynamic> data = json.decode(response.body);
+    
+    if(data !=null){
+       
+      data.forEach((orderId, orderData) {
+      loaditems.add(Order(
+      id: orderId,
+      total: orderData["total"],
+      dateTime:DateTime.parse(orderData["dateTime"]),
+      products: (orderData['products'] as List<dynamic>).map((cartItem) {
+        return CartItem(
+          id: cartItem['id'],
+          protuctId: cartItem['protuctId'],
+          title: cartItem['title'],
+          quantity: cartItem['quantity'], 
+          price: cartItem['price'],
+
+          );
+      } ).toList(),
+
+    ));
+      
+    });
+    notifyListeners();
+    }
+   _items =  loaditems.reversed.toList();
+    
+    return Future.value();
 
   }
 

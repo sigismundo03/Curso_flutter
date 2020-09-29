@@ -38,7 +38,7 @@ class _ProductFormViewState extends State<ProductFormView> {
   bool isValidateUrl(String url){
     bool stardWithHTTp = url.toLowerCase().startsWith("http://"); 
     bool stardWithHTTps = url.toLowerCase().startsWith("https://"); 
-    bool endWithPng = url.toLowerCase().endsWith("png"); 
+    bool endWithPng = url.toLowerCase().endsWith(".png"); 
     bool endWithJpg = url.toLowerCase().endsWith(".jpg"); 
     bool endWithJpeg = url.toLowerCase().endsWith(".jpeg"); 
 
@@ -144,6 +144,7 @@ class _ProductFormViewState extends State<ProductFormView> {
           IconButton(
             icon: Icon(Icons.save),
             onPressed: (){
+                _saveForm();
 
             },
           )
@@ -216,20 +217,16 @@ class _ProductFormViewState extends State<ProductFormView> {
                 },
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
-                validator: (value){
-                  bool urlvazia = value.trim().isEmpty;
-                  bool urlinvalida = !isValidateUrl(value);
+                 validator: (value) {
+                        bool isEmpty = value.trim().isEmpty;
+                        bool isInvalid = value.trim().length < 10;
 
-                  if(urlvazia){
-                    return "Url Vazia";
+                        if (isEmpty || isInvalid) {
+                          return 'Informe uma Descrição válida com no mínimo 10 caracteres!';
+                        }
 
-                  }else if(urlinvalida){
-                      return "url invalida. Digite uma Url valida";
-
-                }else{
-                   return null; 
-                 }
-                },
+                        return null;
+                  },
 
               ),
               Row(
@@ -250,6 +247,20 @@ class _ProductFormViewState extends State<ProductFormView> {
                       onFieldSubmitted: (_){
                         _saveForm();
                       },
+                    validator: (value){
+                  bool urlvazia = value.trim().isEmpty;
+                  bool urlinvalida = !isValidateUrl(value);
+
+                  if(urlvazia){
+                    return "Url Vazia";
+
+                  }else if(urlinvalida){
+                      return "url invalida. Digite uma Url valida";
+
+                }else{
+                   return null; 
+                 }
+                    }
                     ),
                   ),
                   Container(
