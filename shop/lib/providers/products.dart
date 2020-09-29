@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop/providers/Product.dart';
+import '../exceptions/httpexception.dart';
 
 class Products with ChangeNotifier{
-  final  url= 'coloca minha url';
+  final  baseurl= 'coloca minha baseurl';
 
   List<Product> _items =[];
 
@@ -23,7 +24,7 @@ class Products with ChangeNotifier{
   } 
   
   Future<void> loaProducts() async{
-    final response = await http.get(url);
+    final response = await http.get("$baseurl.json");
     Map<String,dynamic> data = json.decode(response.body);
     _items.clear();
     if(data !=null){
@@ -50,7 +51,7 @@ class Products with ChangeNotifier{
   Future<void> addProduct(Product product) async{
     
     final response = await http.post(
-      url,
+      "$baseurl.json",
       body: json.encode({
       'title': product.title,
       'price': product.price,
@@ -73,13 +74,19 @@ class Products with ChangeNotifier{
     
   }
 
-   void updateProduct(Product product){
+   Future<void> updateProduct(Product product) async{
      if(product == null && product.id == null){
        return;
      }
     final index = _items.indexWhere((produ) => produ.id==product.id);
     
     if(index >=0){
+      await http.patch("$baseurl/${product.id}.json", body: json.encode({
+      'title': product.title,
+      'price': product.price,
+      'description': product.description,
+      'imageUrl': product.imageUrl,
+      },),);
       _items[index] = product;
        notifyListeners();
 
@@ -87,12 +94,23 @@ class Products with ChangeNotifier{
 
    }
 
-   void deleteProduct(String id){
+   Future<void> deleteProduct(String id) async{
      final index = _items.indexWhere((product) => product.id==id);
       if(index>=0){
         final product = _items[index];
         _items.remove(product); 
-        notifyListeners();
+          notifyListeners();
+
+        final response= await http.delete("$baseurl/${product.id}.json",);
+        
+          if(response.statusCode >= 400){
+            _items.insert(index, product);
+               notifyListeners();
+               throw HttpException("Ocorreu um error em adiciona o produto");
+          } 
+         
+        
+       
 
       }
    }

@@ -1,6 +1,6 @@
-import 'dart:math';
-
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 import './cart.dart';
 
@@ -23,6 +23,7 @@ class Order{
 
 
 class Orders with ChangeNotifier{
+  final baseUrl ="";
   List<Order> _items = [];
 
   List<Order> get items {
@@ -34,14 +35,30 @@ class Orders with ChangeNotifier{
     return _items.length;
   }
   
-  void addOrders(Cart cart ){
-    _items.insert(0, Order(
-        id: Random().nextDouble().toString(),
+   Future<void> addOrders(Cart cart ) async {
+     final date =DateTime.now();
+     final response = await http.post(baseUrl, body: json.encode({
+        'total': cart.totalAmount,
+        'dateTime': date.toIso8601String(),
+        'products': cart.item.values.map((cartItem) => {
+          'id':cartItem.id,
+          'protuctId':cartItem.protuctId,
+          'title':cartItem.title,
+          'quantity':cartItem.quantity,
+          'price':cartItem.price,
+        }),
+        
+      }));
+      if(response.statusCode == 200){
+         _items.insert(0, Order(
+        id: json.decode(response.body)['name'],
         total: cart.totalAmount,
-        dateTime: DateTime.now(),
+        dateTime: date ,
         products: cart.item.values.toList(),
     ),
     );
+      }
+   
     notifyListeners();
 
   }

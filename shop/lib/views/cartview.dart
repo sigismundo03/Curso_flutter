@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/components/cartitemwidget.dart';
+import 'package:shop/components/ordebutton.dart';
 import '../providers/cart.dart';
-import '../providers/orders.dart';
 
 class CartView extends StatelessWidget {
   
@@ -42,16 +42,7 @@ class CartView extends StatelessWidget {
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
                   Spacer(),
-                  FlatButton(
-                    onPressed: (){
-                      Provider.of<Orders>(context, listen: false).addOrders(cart,);
-                      cart.clear();
-                    },
-                    child: Text(
-                      'COMPRAR',
-                      style: TextStyle(color: Theme.of(context).primaryColor,),
-                    ),
-                  ),
+                  OrdeButton(cart: cart),
                 ],
               ),
 

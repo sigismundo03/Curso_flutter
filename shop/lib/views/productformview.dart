@@ -96,9 +96,13 @@ class _ProductFormViewState extends State<ProductFormView> {
 
 
     final products = Provider.of<Products>(context, listen: false,);
-    if(_formData['id'] == null){
+   
       try{
+        if(_formData['id'] == null){
         await products.addProduct(newProduct);
+        }else{
+          await products.updateProduct(newProduct);
+        }
          Navigator.of(context).pop();
       } catch(error){
         await showDialog<Null>(
@@ -127,15 +131,7 @@ class _ProductFormViewState extends State<ProductFormView> {
       }
      
       
-    }else{
-        setState(() {
-          isLoanding=false;
-        });
-      products.updateProduct(newProduct);
-
-    Navigator.of(context).pop();
-    }
-
+    
 
   }
   
