@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/exceptions/authexecption.dart';
+import 'package:shop/providers/auth.dart';
 
 enum AuthMode { Singup, Login }
 
@@ -17,7 +20,28 @@ class _AuthCardState extends State<AuthCard> {
     'password': ' ',
   };
   
-  void _submit(){
+  void _showErrorDialog(String messagemdeError){
+    showDialog(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          title: Text("Ocorreu um error"),
+          content: Text(messagemdeError),
+          actions: [
+            FlatButton(
+              onPressed: (){
+                Navigator.of(context).pop(false);
+              }, 
+              child: Text("Fechar"), 
+            ),
+          ],
+        );
+      }
+    );
+
+  }
+
+  Future<void> _submit() async{
     if(!_formkey.currentState.validate()){
       return ;
     }
@@ -29,11 +53,22 @@ class _AuthCardState extends State<AuthCard> {
 
     _formkey.currentState.save();
 
-    if(_authMode == AuthMode.Login){
+    Auth auth = Provider.of(context, listen: false);
+    try{
+       if(_authMode == AuthMode.Login){
+      await auth.login(_authData["email"], _authData["password"]);
       ///login
     }else{
-      ///cadastra
+      await auth.signup(_authData["email"], _authData["password"]);
+      ///Cadastro
     }
+    } on AuthException catch(error){
+        _showErrorDialog(error.toString());
+    } catch(){
+      
+    }
+
+   
       
      setState(() {
        _isloading = false;
