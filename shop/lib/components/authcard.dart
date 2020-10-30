@@ -64,9 +64,7 @@ class _AuthCardState extends State<AuthCard> {
     }
     } on AuthException catch(error){
         _showErrorDialog(error.toString());
-    } catch(){
-      
-    }
+    } 
 
    
       

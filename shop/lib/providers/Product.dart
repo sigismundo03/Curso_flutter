@@ -25,16 +25,12 @@ void _toggleFavorite() {
   this.isFavorite = !this.isFavorite; 
    notifyListeners();
 }
- Future<void> toggleFavorite() async{
+ Future<void> toggleFavorite(String token, String userId) async{
     _toggleFavorite();
     
     try{
-       final url = " ${Urls.Base_API}produto/$id.json";
-    final response = await http.patch(url, body: json.encode(
-      {
-        'isFavorite':isFavorite,
-      }
-    ));
+       final url = " ${Urls.Base_API}userFavorites/$userId/$id.json?auth=$token";
+    final response = await http.put(url, body: json.encode(isFavorite));
 
     if(response.statusCode>= 400){
       _toggleFavorite();
