@@ -9,7 +9,18 @@ class AuthHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Auth auth = Provider.of(context);
-
-    return auth.isAut ? ProdutoOverviewViewes() : AuthView();
+    return FutureBuilder(
+         future:auth.tryAutoLogin(),
+         builder: (context, snapshot){
+           if( snapshot.connectionState == ConnectionState.waiting){
+             return Center(
+                  child: CircularProgressIndicator()
+             );
+           }else{
+            return auth.isAut ? ProdutoOverviewViewes() : AuthView();
+           }
+         }
+        
+        );
   }
 }
