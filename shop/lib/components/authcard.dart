@@ -99,8 +99,8 @@ class _AuthCardState extends State<AuthCard> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Container(
-        height: _authMode == AuthMode.Singup ? 232 : 360,
-        width: deviceSize.width * 0.75,
+        height: _authMode == AuthMode.Singup ? 200 : 460,
+        width: deviceSize.width * 0.60,
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formkey,
@@ -112,7 +112,7 @@ class _AuthCardState extends State<AuthCard> {
               ),
               keyboardType: TextInputType.emailAddress,
               validator: (value){
-                if(value.trim().isEmpty || value.contains('@')){
+                if(value.trim().isEmpty || !value.contains('@')){
                   return "email invalido";
                 }
                 return null;
