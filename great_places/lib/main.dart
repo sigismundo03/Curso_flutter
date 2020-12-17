@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:great_places/screens/places_list_screens.dart';
+import 'package:great_places/utils/app_routes.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home:PlacesListScreens(),
+      routes: {
+        AppRoutes.PLACE_FORM: (context) => PlacesListScreens(),
+      },
     );
   }
 }
