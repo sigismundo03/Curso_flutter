@@ -3,12 +3,9 @@ import 'package:provider/provider.dart';
 import '../providers/cart.dart';
 
 class CartItemWidget extends StatelessWidget {
-
   final CartItem cartItem;
 
-  CartItemWidget({
-    @required this.cartItem,
-  });
+  CartItemWidget(this.cartItem);
 
   @override
   Widget build(BuildContext context) {
@@ -18,50 +15,42 @@ class CartItemWidget extends StatelessWidget {
         color: Theme.of(context).errorColor,
         child: Icon(
           Icons.delete,
+          color: Colors.white,
           size: 40,
-          
         ),
         alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 14),
+        padding: EdgeInsets.only(right: 20),
         margin: EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 4,
         ),
       ),
       direction: DismissDirection.endToStart,
-      confirmDismiss: (_){
+      confirmDismiss: (_) {
         return showDialog(
-          context: context,
-          builder:(context){
-            return AlertDialog(
-              title: Text('Tem certeza ?'),
-              content: Text('Quer remove o item do carrinho? '),
-              actions: [
-                FlatButton(
-                  child: Text("Não"), 
-                onPressed: (){
-                  Navigator.of(context).pop(false);
-                },
-               
-                ),
-                FlatButton(
-                  
-                child: Text("Sim"),
-                  onPressed: (){
-                  Navigator.of(context).pop(true);
-
-                },
-                ),
-              ],
-              );
-        
-          }
-        
-        
-        );
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: Text('Tem certeza?'),
+                  content: Text('Quer remover o item do carrinho?'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Não'),
+                      onPressed: () {
+                        Navigator.of(ctx).pop(false);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text('Sim'),
+                      onPressed: () {
+                        Navigator.of(ctx).pop(true);
+                      },
+                    ),
+                  ],
+                ));
       },
-      onDismissed: (_){
-        Provider.of<Cart>(context, listen: false).remove(cartItem.protuctId);
+      onDismissed: (_) {
+        Provider.of<Cart>(context, listen: false)
+            .removeItem(cartItem.productId);
       },
       child: Card(
         margin: EdgeInsets.symmetric(
@@ -69,24 +58,21 @@ class CartItemWidget extends StatelessWidget {
           vertical: 4,
         ),
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(8),
           child: ListTile(
             leading: CircleAvatar(
               child: Padding(
-              padding: EdgeInsets.all(5),
-              child: FittedBox(
+                padding: EdgeInsets.all(5),
+                child: FittedBox(
                   child: Text('${cartItem.price}'),
-              ), 
-              
+                ),
               ),
             ),
             title: Text(cartItem.title),
             subtitle: Text('Total: R\$ ${cartItem.price * cartItem.quantity}'),
             trailing: Text('${cartItem.quantity}x'),
           ),
-        
         ),
-        
       ),
     );
   }

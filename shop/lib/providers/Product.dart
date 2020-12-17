@@ -2,18 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/utils/constant.dart';
+import 'package:shop/utils/constants.dart';
 
-class  Product with ChangeNotifier{
+class Product with ChangeNotifier {
   final String id;
   final String title;
   final String description;
   final double price;
   final String imageUrl;
   bool isFavorite;
-  
-   Product({
-    @required this.id,
+
+  Product({
+    this.id,
     @required this.title,
     @required this.description,
     @required this.price,
@@ -21,24 +21,26 @@ class  Product with ChangeNotifier{
     this.isFavorite = false,
   });
 
-void _toggleFavorite() {
-  this.isFavorite = !this.isFavorite; 
-   notifyListeners();
-}
- Future<void> toggleFavorite(String token, String userId) async{
-    _toggleFavorite();
-    
-    try{
-       final url = " ${Urls.Base_API}userFavorites/$userId/$id.json?auth=$token";
-    final response = await http.put(url, body: json.encode(isFavorite));
+  void _toggleFavorite() {
+    isFavorite = !isFavorite;
+    notifyListeners();
+  }
 
-    if(response.statusCode>= 400){
+  Future<void> toggleFavorite(String token, String userId) async {
+    _toggleFavorite();
+
+    try {
+      final url = '${Constants.BASE_API_URL}userFavorites/$userId/$id.json?auth=$token';
+      final response = await http.put(
+        url,
+        body: json.encode(isFavorite),
+      );
+
+      if (response.statusCode >= 400) {
+        _toggleFavorite();
+      }
+    } catch (error) {
       _toggleFavorite();
     }
-    } catch(error){
-     _toggleFavorite();
-    }
-
-   
   }
 }
