@@ -10,11 +10,51 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin {
   GlobalKey<FormState> _form = GlobalKey();
   bool _isLoading = false;
   AuthMode _authMode = AuthMode.Login;
   final _passwordController = TextEditingController();
+  AnimationController _controller;
+  Animation<double> _opcityanimation;
+  Animation<Offset> _slidanimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+       vsync: this,
+       duration: Duration(
+         milliseconds: 300,
+       ),
+    );
+    _opcityanimation = Tween<double>(
+        begin: 0.0,
+        end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.linear,
+      )
+    );
+ _slidanimation = Tween<Offset>(
+        begin: Offset(0,-1),
+        end: Offset(0,0),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.linear,
+      )
+    );
+   
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+     _controller.dispose();
+  }
 
   final Map<String, String> _authData = {
     'email': '',
@@ -80,10 +120,12 @@ class _AuthCardState extends State<AuthCard> {
       setState(() {
         _authMode = AuthMode.Signup;
       });
+        _controller.forward();
     } else {
       setState(() {
         _authMode = AuthMode.Login;
       });
+        _controller.reverse();
     }
   }
 
@@ -96,8 +138,11 @@ class _AuthCardState extends State<AuthCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: Container(
-        height: _authMode == AuthMode.Login ? 300 : 270,
+      child:AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.linear,
+        height: _authMode == AuthMode.Login ? 295 : 390,
+        //height: _heightanimation.value.height,
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -127,18 +172,31 @@ class _AuthCardState extends State<AuthCard> {
                 },
                 onSaved: (value) => _authData['password'] = value,
               ),
-              if (_authMode == AuthMode.Signup)
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Confirmar Senha'),
-                  obscureText: true,
-                  validator: _authMode == AuthMode.Signup
-                      ? (value) {
-                          if (value != _passwordController.text) {
-                            return "Senha são diferentes!";
-                          }
-                          return null;
-                        }
-                      : null,
+                AnimatedContainer(
+                  constraints: BoxConstraints(
+                    minHeight: _authMode == AuthMode.Signup ? 60 : 0,
+                    maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
+                    ),
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.linear,
+                  child: FadeTransition(
+                    opacity: _opcityanimation,
+                    child: SlideTransition(
+                      position: _slidanimation,
+                      child: TextFormField(
+                        decoration: InputDecoration(labelText: 'Confirmar Senha'),
+                        obscureText: true,
+                        validator: _authMode == AuthMode.Signup
+                            ? (value) {
+                                if (value != _passwordController.text) {
+                                  return "Senha são diferentes!";
+                                }
+                                return null;
+                              }
+                            : null,
+                      ),
+                    ),
+                  ),
                 ),
               Spacer(),
               if (_isLoading)
