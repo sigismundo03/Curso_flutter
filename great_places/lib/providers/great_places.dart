@@ -2,10 +2,29 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:great_places/data/db_data.dart';
 import 'package:great_places/models/place.dart';
 
 class GreatPlaces with ChangeNotifier{
   List<Place> _items = [];
+
+  Future<void> loadPlaces() async{
+    final dataList = await DataUtil.getData('places');
+    _items = dataList.map(
+      (item) => Place(
+        id: item['id'],
+        imagen:  File(item['imagen']),
+         location: null,
+        // location: item['location'],
+        title:  item['title'],
+
+      ),
+      
+    ).toList();
+    notifyListeners();
+
+
+  }
 
   List<Place> get items{
     return [..._items];
@@ -27,6 +46,12 @@ class GreatPlaces with ChangeNotifier{
       title: title,
     );
     _items.add(newPlace);
+    DataUtil.insert('places', {
+      'id':newPlace.id,
+      'title':newPlace.title,
+      'imagen':newPlace.imagen.path,
+
+    });
     notifyListeners();
 
   }
