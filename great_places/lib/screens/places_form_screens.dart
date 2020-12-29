@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:great_places/providers/great_places.dart';
 import 'package:great_places/widgets/imagen_input.dart';
+import 'package:provider/provider.dart';
 
 class PlacesFormScreen extends StatefulWidget {
   @override
@@ -8,9 +12,24 @@ class PlacesFormScreen extends StatefulWidget {
 
 class _PlacesFormScreenState extends State<PlacesFormScreen> {
 final _textController = TextEditingController();
+File _pikerdImage;
+void _seelectImage( File pikerdImage){
+  _pikerdImage = pikerdImage;
+}
+void _submitForm( ){
 
-void _submitForm(){
+  if(_textController.text.isEmpty || _pikerdImage == null){
+    return;
+  }
 
+  Provider.of<GreatPlaces>(context,listen: false,).addPlace(
+     _textController.text ,
+     _pikerdImage, 
+    
+  );
+
+  Navigator.of(context).pop();
+  
 }
 
   @override
@@ -36,7 +55,7 @@ void _submitForm(){
                         
                       ),
                     ),
-                    ImagenInput(),
+                    ImagenInput(this._seelectImage),
                   ],
 
                 ),
