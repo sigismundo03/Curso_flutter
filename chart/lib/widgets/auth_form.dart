@@ -2,6 +2,10 @@ import 'package:chart/models/auth_data.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
+  final void Function(AuthDATA authDATA) oneSubmit;
+
+  AuthForm(this.oneSubmit);
+
   @override
   _AuthFormState createState() => _AuthFormState();
 }
@@ -12,9 +16,10 @@ class _AuthFormState extends State<AuthForm> {
 
   void _submit(){
     bool isvalidate =  _formKey.currentState.validate();
+    FocusScope.of(context).unfocus();
     
     if(isvalidate){
-
+        widget.oneSubmit(_authDATA);
     }
 
   }
@@ -33,37 +38,41 @@ class _AuthFormState extends State<AuthForm> {
                 children: [
                   if(_authDATA.isSignup)
                   TextFormField(
+                    key: ValueKey("name"),
                     decoration: InputDecoration(
                       labelText: 'Nome',
                     ),
+                    initialValue: _authDATA.name,
                     onChanged: (value) => _authDATA.name = value,
                     validator: (value) {
-                      if(value.trim() != null){
+                      if(value.trim() == null){
                         return 'Digite um nome valido';
                       }
                       return null;
                     },
                   ),
                   TextFormField(
+                    key: ValueKey("email"),
                     decoration: InputDecoration(
                       labelText: 'E-mail',
                     ),
                     onChanged: (value) => _authDATA.email = value,
                     validator: (value) {
-                      if(value.trim() != null  || value.contains('@')  ){
+                      if(value.trim() == null  || !value.contains('@')  ){
                         return 'Digite um e-mail valido';
                       }
                       return null;
                     },
                   ),
                   TextFormField(
+                    key: ValueKey("password"),
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Senha',
                     ),
                     onChanged: (value) => _authDATA.password = value,
                      validator: (value) {
-                      if(value.trim() != null  || value.length < 7){
+                      if(value.trim() == null  || value.length < 7){
                         return 'Digite uma senha  valida maior que 7';
                       }
                       return null;
@@ -78,7 +87,7 @@ class _AuthFormState extends State<AuthForm> {
                   ),
                   FlatButton(
                     textColor: Theme.of(context).primaryColor,
-                    child: Text('Criar um nova Conta?'),
+                    child: Text(_authDATA.isLogin ?'Criar um nova Conta?': 'Já possui uma conta?'),
                     onPressed: () {
                       setState(() {
                         
