@@ -1,3 +1,7 @@
+
+
+import 'dart:io';
+
 import 'package:chart/models/auth_data.dart';
 import 'package:chart/widgets/user_imagem.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +22,24 @@ class _AuthFormState extends State<AuthForm> {
   void _submit(){
     bool isvalidate =  _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
+
+    if(_authDATA.email == null && _authDATA.isSignup){
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("è necessario imagem para cadastro"),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+    }
     
     if(isvalidate){
         widget.oneSubmit(_authDATA);
     }
 
+  }
+
+  void _handlePickerImage(File image){
+     _authDATA.image = image;
   }
 
   @override
@@ -38,7 +55,7 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 children: [
                   if(_authDATA.isSignup)
-                    UserImagem(),
+                    UserImagem(_handlePickerImage),
                   if(_authDATA.isSignup)
                   TextFormField(
                     key: ValueKey("name"),

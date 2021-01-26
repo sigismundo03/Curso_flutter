@@ -1,3 +1,5 @@
+import 'dart:io';
+
 enum AuthMode{
   LOGIN,
   SIGNUP,
@@ -8,6 +10,7 @@ class AuthDATA {
   String email;
   String password;
   AuthMode _mode =  AuthMode.LOGIN;
+  File image;
   
 
   bool get isSignup{
