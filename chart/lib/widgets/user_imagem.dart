@@ -22,7 +22,11 @@ class _UserImagemState extends State<UserImagem> {
    
 
     final picker = ImagePicker();
-    final pickerImage = await picker.getImage(source: ImageSource.camera);
+    final pickerImage = await picker.getImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+      maxWidth: 150, 
+    );
     setState(() {
       _pickerImageFile = File(pickerImage.path);
     });

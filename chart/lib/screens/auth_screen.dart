@@ -2,6 +2,7 @@ import 'package:chart/models/auth_data.dart';
 import 'package:chart/widgets/auth_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -41,11 +42,23 @@ class _AuthScreenState extends State<AuthScreen> {
         password: authDATA.password.trim(),
       );
 
+      final ref = FirebaseStorage.instance.
+      ref()
+      .child('user_images')
+      .child(authResult.user.uid + 'jpg');
+
+      await ref.putFile(authDATA.image).onComplete;
+      final url = await ref.getDownloadURL();
       final userData = {
         'name': authDATA.name,
         'email': authDATA.email,
+        'imageUrl': url,
 
       };
+    
+      
+
+
       await Firestore.instance.collection('users').document(authResult.user.uid).setData(userData);
 
 
