@@ -1,4 +1,5 @@
 import 'package:chart/models/auth_data.dart';
+import 'package:chart/widgets/user_imagem.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
@@ -36,6 +37,8 @@ class _AuthFormState extends State<AuthForm> {
               key: _formKey,
               child: Column(
                 children: [
+                  if(_authDATA.isSignup)
+                    UserImagem(),
                   if(_authDATA.isSignup)
                   TextFormField(
                     key: ValueKey("name"),
