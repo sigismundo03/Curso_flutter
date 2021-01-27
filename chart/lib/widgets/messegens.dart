@@ -6,16 +6,9 @@ import 'package:flutter/material.dart';
 class Messegens extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: FirebaseAuth.instance.currentUser(),
-      builder: (context, userSnapshot){
-        if(userSnapshot.connectionState == ConnectionState.waiting){
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+    final User user =  FirebaseAuth.instance.currentUser;
         return  StreamBuilder(
-        stream: Firestore.instance.collection('chat').orderBy('createdAt', descending: true,).snapshots(),
+        stream: FirebaseFirestore.instance.collection('chat').orderBy('createdAt', descending: true,).snapshots(),
         builder: (context, chatSnapshots){
 
           if(chatSnapshots.connectionState == ConnectionState.waiting){
@@ -32,9 +25,10 @@ class Messegens extends StatelessWidget {
             itemCount: chatDocs.length,
             itemBuilder:  (context, index){
               return MessageBubble(
-                chatDocs[index]['text'] ?? "",
-                chatDocs[index]['userId'] == userSnapshot.data.uid,
-                chatDocs[index]['userName'],
+                chatDocs[index].get('text') ?? "",
+                chatDocs[index].get('userId') ==  user.uid,
+                chatDocs[index].get('userName'),
+                chatDocs[index].get('userImage'),                
                 key: ValueKey(chatDocs[index].documentID),
                 
                 );
@@ -46,8 +40,5 @@ class Messegens extends StatelessWidget {
         },
         
       );
-      },
-      
-    );
   }
 }

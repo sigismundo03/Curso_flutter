@@ -29,7 +29,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _hadleSubmit(AuthDATA authDATA) async {
 
     satstateIsLaoding();
-    AuthResult authResult;
+    UserCredential authResult;
     try{
       if (authDATA.isLogin) {
       authResult = await _auth.signInWithEmailAndPassword(
@@ -59,7 +59,7 @@ class _AuthScreenState extends State<AuthScreen> {
       
 
 
-      await Firestore.instance.collection('users').document(authResult.user.uid).setData(userData);
+      await FirebaseFirestore.instance.collection('users').doc(authResult.user.uid).set(userData);
 
 
     }
